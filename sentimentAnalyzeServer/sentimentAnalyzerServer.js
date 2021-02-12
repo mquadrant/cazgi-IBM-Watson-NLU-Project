@@ -1,5 +1,7 @@
 const express = require('express');
 const app = new express();
+const dotenv = require('dotenv');
+dotenv.config()
 
 app.use(express.static('client'))
 
@@ -16,7 +18,7 @@ function getNLUInstance() {
     const naturalLanguageUnderstanding = new NaturalLanguageUnderstandingV1({
         version: '2020-08-01',
         authenticator: new IamAuthenticator({
-            apiKey: api_key
+            apikey: api_key
         }),
         serviceUrl: api_url
     })
@@ -39,7 +41,7 @@ app.get("/",(req,res)=>{
     res.render('index.html');
   });
 
-app.get("/url/emotion", (req,res) => {
+app.get("/url/emotion", async (req,res) => {
     try{
       const analyzeParams = {
         'url': req.query.url,
@@ -48,14 +50,14 @@ app.get("/url/emotion", (req,res) => {
             }
         };
         const response = await callToNLU(analyzeParams)
-        console.log("The Response Url Emotion !!! ", response)
-        return res.send({"happy":"90","sad":"10"});  
+        const doc = response.result.emotion.document
+        return res.send(doc.emotion);  
     } catch(err) {
         console.log('error:', err);
     }
 });
 
-app.get("/url/sentiment", (req,res) => {
+app.get("/url/sentiment", async (req,res) => {
     try{
         const analyzeParams = {
         'url': req.query.url,
@@ -64,40 +66,40 @@ app.get("/url/sentiment", (req,res) => {
             }
         };
         const response = await callToNLU(analyzeParams)
-        console.log("The Response Url Sentiment!!! ", response)
-        return res.send("url sentiment for "+req.query.url);
+        const doc = response.result.sentiment.document
+        return res.send(doc.label);
     } catch(err) {
         console.log('error:', err);
     }
 });
 
-app.get("/text/emotion", (req,res) => {
+app.get("/text/emotion", async (req,res) => {
     try{
         const analyzeParams = {
-        'url': req.query.text,
+        'text': req.query.text,
         'features': {
             'emotion': { 'limit': 3 }
             }
         };
         const response = await callToNLU(analyzeParams)
-        console.log("The Response Text Emotion !!! ", response)
-        return res.send({"happy":"10","sad":"90"});
+        const doc = response.result.emotion.document
+        return res.send(doc.emotion); 
     } catch(err) {
         console.log('error:', err);
     }
 });
 
-app.get("/text/sentiment", (req,res) => {
+app.get("/text/sentiment", async (req,res) => {
     try{
         const analyzeParams = {
-        'url': req.query.text,
+        'text': req.query.text,
         'features': {
             'sentiment': { 'limit': 3 }
             }
         };
         const response = await callToNLU(analyzeParams)
-        console.log("The Response Text Sentiment!!! ", response)
-        return res.send("text sentiment for "+req.query.text);
+        const doc = response.result.sentiment.document
+        return res.send(doc.label);
     } catch(err) {
         console.log('error:', err);
     }
