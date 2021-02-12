@@ -67,7 +67,7 @@ app.get("/url/sentiment", async (req,res) => {
         };
         const response = await callToNLU(analyzeParams)
         const doc = response.result.sentiment.document
-        return res.send(doc.label);
+        return res.send(doc);
     } catch(err) {
         console.log('error:', err);
     }
@@ -99,7 +99,7 @@ app.get("/text/sentiment", async (req,res) => {
         };
         const response = await callToNLU(analyzeParams)
         const doc = response.result.sentiment.document
-        return res.send(doc.label);
+        return res.send(doc);
     } catch(err) {
         console.log('error:', err);
     }
