@@ -52,11 +52,11 @@ class App extends React.Component {
       this.setState({sentimentOutput: score});
       let output;
       if(label === "positive") {
-        output = <div style={{color:"green",fontSize:20}}>{response.data}</div>
+        output = <div style={{color:"green",fontSize:20}}>{score}</div>
       } else if (label === "negative"){
-        output = <div style={{color:"red",fontSize:20}}>{response.data}</div>
+        output = <div style={{color:"red",fontSize:20}}>{score}</div>
       } else {
-        output = <div style={{color:"yellow",fontSize:20}}>{response.data}</div>
+        output = <div style={{color:"yellow",fontSize:20}}>{score}</div>
       }
       this.setState({sentimentOutput: output});
     });
