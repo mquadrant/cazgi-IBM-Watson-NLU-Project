@@ -47,7 +47,7 @@ class App extends React.Component {
     ret.then((response)=>{
 
       //Include code here to check the sentiment and fomrat the data accordingly
-
+        response.data = response.data.label
       this.setState({sentimentOutput:response.data});
       let output = response.data;
       if(response.data === "positive") {
